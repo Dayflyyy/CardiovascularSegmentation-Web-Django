@@ -18,13 +18,20 @@ from django.contrib import admin
 from django.urls import path, include
 from App import views
 from rest_framework.routers import DefaultRouter
+from rest_framework.schemas import get_schema_view
+from rest_framework.documentation import include_docs_urls
+
+from App.views import *
 
 router = DefaultRouter()
-router.register(prefix="viewsets", viewset=views.DoctorViewSet)
+router.register(r'doctors', DoctorViewSet, basename='doctor')
+router.register(r'patients', PatientViewSet, basename='patients')
+router.register(r'records', MedicalRecordViewSet, basename='records')
+
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path("admin/", admin.site.urls),
-    path("", include(router.urls)),
+    path('', include(router.urls)),
+    # path('docs/', include_docs_urls(title='测试平台接口文档')),
     # path('api-token-auth/',views.obtain_auth_token)
 ]
-

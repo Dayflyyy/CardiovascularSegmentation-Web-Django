@@ -30,6 +30,7 @@ class DoctorManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
         return self._create_user(name, sex, age, department, phone, email, password, **extra_fields)
 
+
 # 医生数据表
 class Doctor(AbstractUser, PermissionsMixin):
     # 个人主页
@@ -41,7 +42,7 @@ class Doctor(AbstractUser, PermissionsMixin):
     email = models.CharField(verbose_name="邮箱", max_length=50)
     introduction = models.TextField(verbose_name="简介", max_length=500, null=True, blank=True)
     # 使用url存储照片地址
-    photo = models.ImageField(verbose_name="头像", upload_to="doctor_photo")
+    photo = models.ImageField(verbose_name="头像", upload_to="doctor_photo", null=True, blank=True)
 
     REQUIRED_FIELDS = ['name', 'sex', 'age', 'department', 'phone', 'email']
 
@@ -59,11 +60,12 @@ class Patient(models.Model):
     doctor = models.ForeignKey(to='Doctor', to_field='id', verbose_name="医生", on_delete=models.CASCADE)
     description = models.TextField(verbose_name="描述", max_length=500, null=True, blank=True)
     # 病人对应相应的ct图像和病历，外键，删除方法设置为删除时可以置空
-    ct_image = models.ForeignKey(to='NIfTIImage', to_field='id', verbose_name="CT图像", on_delete=models.SET_NULL,
-                                 null=True,
-                                 blank=True)
+    patient_ct_image = models.ForeignKey(to='NIfTIImage', to_field='id', verbose_name="CT图像",
+                                         on_delete=models.SET_NULL,
+                                         null=True,
+                                         blank=True)
     # 病人对应相应的病历，外键
-    medical_record = models.ForeignKey(to='MedicalRecord', to_field='id', verbose_name="病历",
+    record = models.ForeignKey(to='MedicalRecord', to_field='id', verbose_name="病历",
                                        on_delete=models.SET_NULL, null=True,
                                        blank=True)
 
@@ -77,8 +79,8 @@ class Patient(models.Model):
 
 # 病历数据表
 class MedicalRecord(models.Model):
-    patient_id = models.ForeignKey(to='Patient', to_field='id', verbose_name="病人", on_delete=models.CASCADE)
-    doctor = models.ForeignKey(to='Doctor', verbose_name="医生", on_delete=models.CASCADE)
+    record_patient = models.ForeignKey(to='Patient', to_field='id', verbose_name="病人", on_delete=models.CASCADE)
+    doctor = models.ForeignKey(to='Doctor', to_field='id', verbose_name="医生", on_delete=models.CASCADE)
     content = models.TextField(verbose_name="内容", max_length=1000, null=True, blank=True)
     # 从多种病种中选择
     disease_choice = {
@@ -91,9 +93,9 @@ class MedicalRecord(models.Model):
     }
     disease = models.IntegerField(verbose_name="疾病类型", choices=disease_choice.items(), default=1)
 
-    ct_image = models.ForeignKey(to='NIfTIImage', to_field='id', verbose_name="CT图像", on_delete=models.SET_NULL,
-                                 null=True,
-                                 blank=True)
+    record_ct_image = models.ForeignKey(to='NIfTIImage', to_field='id', verbose_name="CT图像",
+                                         on_delete=models.SET_NULL,
+                                         null=True, blank=True)
     time_created = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     time_lastmodified = models.DateTimeField(verbose_name="最后修改时间", auto_now=True)
 

@@ -47,3 +47,42 @@ doctor2.save()  # 保存医生对象
 # 输出医生信息
 print(doctor1)
 print(doctor2)
+
+
+{
+    "username": "lisi",
+    "password": "345678",
+    "name": "李四",
+    "sex": "女",
+    "age": 30,
+    "department": "外科",
+    "phone": "1234567890",
+    "email": "lisi@example.com",
+    "introduction": "这里是李四的简介"
+}
+doctor1 = Doctor.objects.get(id=5)  # 假设ID为1的医生
+doctor2 = Doctor.objects.get(id=6)  # 假设ID为2的医生
+patient1 = Patient.objects.get(id=1)  # 假设ID为1的病人
+patient2 = Patient.objects.get(id=2)  # 假设ID为2的病人
+patient3 = Patient.objects.get(id=3)  # 假设ID为3的病人
+
+medical_record1 = MedicalRecord.objects.create(
+    patient_id=patient1,
+    doctor=doctor1,
+    content='病人1的病历内容...',
+    disease=2,  # 假设是心绞痛
+)
+
+medical_record2 = MedicalRecord.objects.create(
+    patient_id=patient2,
+    doctor=doctor2,
+    content='病人2的病历内容...',
+    disease=3,  # 假设是心肌梗死
+)
+
+medical_record3 = MedicalRecord.objects.create(
+    patient_id=patient3,
+    doctor=doctor1,
+    content='病人3的病历内容...',
+    disease=1,  # 假设是冠状动脉粥样硬化症
+)

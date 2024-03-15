@@ -36,7 +36,16 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
         extra_kwargs = {
-            'patient': {
-                'required': True
+            'record_patient': {
+                'required': True,
+                'error_messages': {
+                    'required': '请提供病人信息'
+                }
+            },
+            'doctor': {
+                'required': True,
+                'error_messages': {
+                    'required': '请提供医生信息'
+                }
             }
         }
