@@ -31,21 +31,18 @@ class PatientSerializer(serializers.ModelSerializer):
 
 # 病历序列化
 class MedicalRecordSerializer(serializers.ModelSerializer):
+    doctor_id = serializers.PrimaryKeyRelatedField(queryset=Doctor.objects.all(), write_only=True)
+    record_patient_id = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all(),
+                                                           write_only=True)
+
     class Meta:
         model = MedicalRecord
-        fields = '__all__'
-        depth = 1
-        extra_kwargs = {
-            'record_patient': {
-                'required': True,
-                'error_messages': {
-                    'required': '请提供病人信息'
-                }
-            },
-            'doctor': {
-                'required': True,
-                'error_messages': {
-                    'required': '请提供医生信息'
-                }
-            }
-        }
+        fields = ['id', 'content', 'disease', 'doctor_id', 'record_patient_id']  # 根据需要包含的字段调整
+        depth = 1  # 根据需要调整深度
+
+    def create(self, validated_data):
+        doctor_id = validated_data.pop('doctor_id').id  # 获取 Doctor 对象的 id
+        record_patient_id = validated_data.pop('record_patient_id').id  # 获取 Patient 对象的 id
+        medical_record = MedicalRecord.objects.create(doctor_id=doctor_id, record_patient_id=record_patient_id,
+                                                      **validated_data)
+        return medical_record

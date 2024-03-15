@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "App.apps.AppConfig",
     'rest_framework',
+    'drf_yasg',
     'rest_framework.authtoken'
 ]
 
@@ -165,5 +166,3 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-

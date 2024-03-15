@@ -115,8 +115,8 @@ class PatientViewSet(viewsets.ModelViewSet):
         # Only return patients belonging to the current authenticated doctor
         return Patient.objects.filter(doctor=self.request.user)
 
-    # 病历viewset
 
+# 病历viewset
 
 class MedicalRecordViewSet(viewsets.ModelViewSet):
     queryset = MedicalRecord.objects.all()
@@ -138,10 +138,34 @@ class MedicalRecordViewSet(viewsets.ModelViewSet):
         If the patient's medical record foreign key is empty,
         set it to the newly created medical record id.
         """
+        print("request:")
+        print(request.data)
         request.data['doctor'] = request.user.id
         serializer = self.get_serializer(data=request.data)
+
+        for i in range(1, 11):
+            print('#')
+        print("before is_vaild")
+        for i in range(1, 11):
+            print('#')
+
         serializer.is_valid(raise_exception=True)
+
+        for i in range(1, 11):
+            print('#')
+        print("after is_vaild")
+        for i in range(1, 11):
+            print('#')
+        # print("serializer:")
+        # print(serializer.data)
         self.perform_create(serializer)
+
+        for i in range(1, 11):
+            print('#')
+        print("after create")
+        for i in range(1, 11):
+            print('#')
+
         headers = self.get_success_headers(serializer.data)
 
         # Check if patient_id is provided in the request data
